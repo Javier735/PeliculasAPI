@@ -11,7 +11,6 @@ C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\bin\Debug\net5.0
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\obj\Debug\net5.0\PeliculasAPI.csprojAssemblyReference.cache
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\obj\Debug\net5.0\PeliculasAPI.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\obj\Debug\net5.0\PeliculasAPI.AssemblyInfoInputs.cache
 C:\Users\JavierR\Desktop\CursoAngular\PeliculasAPI\PeliculasAPI\obj\Debug\net5.0\PeliculasAPI.AssemblyInfo.cs

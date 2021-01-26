@@ -1,4 +1,5 @@
-﻿using PeliculasAPI.Entidades;
+﻿using Microsoft.Extensions.Logging;
+using PeliculasAPI.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,41 @@ namespace PeliculasAPI.Repositorios
     public class RepositorioEnMemoria: IRepositorio
     {
         private List<Genero> _generos;
-        public RepositorioEnMemoria()
+        public RepositorioEnMemoria(ILogger<RepositorioEnMemoria> logger)
         {
             _generos = new List<Genero>()
             {
                 new Genero(){Id=1, Nombre="comedia"},
                 new Genero(){Id=2, Nombre="accion"},
-               // new Genero(){Id=3, Nombre="comedia"},
-
+              //new Genero(){Id=3, Nombre="comedia"},
             };
+
+            _guid = Guid.NewGuid();
         }
+        public Guid _guid;
 
         public List<Genero> ObtenerTodosLosGeneros()
         {
             return _generos;
         }
 
-        public Genero ObtenerPorId(int Id)
+        public async Task<Genero> ObtenerPorId(int Id)
         {
+            await Task.Delay(1);
             return _generos.FirstOrDefault(x=>x.Id==Id);
         }
 
+        public Guid ObtenerGUID()
+        {
+            return _guid;
+        }
+
+        public void CrearGenero(Genero genero)
+        {
+            genero.Id = _generos.Count()+1;
+            _generos.Add(genero);
+        }
+
+        /*---*/
     }
 }

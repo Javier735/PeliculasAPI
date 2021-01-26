@@ -41,5 +41,13 @@ namespace PeliculasAPI.Controllers
             })
             .ToArray();
         }
+
+
+        [HttpGet("guid")]
+        public Guid ObtenerGUIDWeatherForecastController()
+        {
+            return repositorio.ObtenerGUID();
+        }
+
     }
 }
