@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 //using Microsoft.AspNetCore.Components;
 using PeliculasAPI.Entidades;
-using PeliculasAPI.Repositorios;
+using PeliculasAPI.Filtros;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,72 +16,50 @@ namespace PeliculasAPI.Controllers
 {
     [Route("api/generos")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GenerosController:ControllerBase
-    {
-        private readonly IRepositorio repositorio;
-        private readonly WeatherForecastController weatherForecastController;
+    {       
+        
         private readonly ILogger<GenerosController> logger;
+        private readonly AplicationDbContext context;
 
-        public GenerosController(IRepositorio repositorio, WeatherForecastController weatherForecastController,ILogger<GenerosController> logger)
+        public GenerosController(ILogger<GenerosController> logger,
+            AplicationDbContext context)
         {
-            this.repositorio = repositorio;
-            this.weatherForecastController = weatherForecastController;
+           
             this.logger = logger;
+            this.context = context;
         }
 
-        [HttpGet]
-        [HttpGet("listado")]
-        [ResponseCache(Duration =60)]
-        public ActionResult <List<Genero>> Get()
+        [HttpGet]       
+        public async Task<ActionResult <List<Genero>>> Get()
         {
-            logger.LogInformation("vamos a mostrar los generos");
-            return repositorio.ObtenerTodosLosGeneros();
+            return await context.Generos.ToListAsync();
         }
-
-
-        [HttpGet("guid")]
-        public ActionResult<Guid> GetGUID()
-        {
-            return Ok(new 
-            { GUID_GenerosController=repositorio.ObtenerGUID(),
-            GUID_WeatherForecastController=weatherForecastController.ObtenerGUIDWeatherForecastController()
-            });
-        }
-
+       
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Genero>> Get(int Id, [FromHeader] string nombre) 
+        public async Task<ActionResult<Genero>> Get(int Id) 
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-            logger.LogDebug($"Obteniendo un genero por id {Id}");
-            var genero = await repositorio.ObtenerPorId(Id);
 
-            if (genero==null)
-            {
-                logger.LogWarning($"no pudimos encontrar el geneo de id {Id}");
-                return NotFound();
-            }
-
-            return genero;
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Genero genero)
+        public async Task<ActionResult> Post([FromBody] Genero genero)
         {
-            repositorio.CrearGenero(genero);
+            context.Add(genero);
+            await context.SaveChangesAsync();
             return NoContent();
         }
         [HttpPut]
         public ActionResult Put([FromBody] Genero genero)
         {
-            return NoContent();
+            throw new NotImplementedException();
         }
         [HttpDelete]
         public ActionResult Delete()
         {
-            return NoContent();
+            throw new NotImplementedException();
         }
 
 
