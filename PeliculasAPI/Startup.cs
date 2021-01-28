@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,22 +32,20 @@ namespace PeliculasAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<AplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
+            
             services.AddCors(options=>
             {
                 var frontendurl = Configuration.GetValue<string>("frontend_url");
                 options.AddDefaultPolicy(builder => {
-                    builder.WithOrigins(frontendurl).AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins(frontendurl).AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });
                 });
             });
-            //services.AddCors(options=>
-            //{ 
-            //options.AddDefaultPolicy(builder=>
-            //{
-            //    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-            //}));
+           
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();                      
             services.AddControllers(options=>
             {

@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PeliculasAPI.DTOs;
 //using Microsoft.AspNetCore.Components;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Filtros;
+using PeliculasAPI.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,19 +25,26 @@ namespace PeliculasAPI.Controllers
         
         private readonly ILogger<GenerosController> logger;
         private readonly AplicationDbContext context;
+        private readonly IMapper mapper;
 
         public GenerosController(ILogger<GenerosController> logger,
-            AplicationDbContext context)
+            AplicationDbContext context, IMapper mapper)
         {
            
             this.logger = logger;
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]       
-        public async Task<ActionResult <List<Genero>>> Get()
+        public async Task<ActionResult <List<GeneroDTO>>> Get([FromQuery]PaginacionDTO paginacionDTO)
         {
-            return await context.Generos.ToListAsync();
+            var queryable=  context.Generos.AsQueryable();
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
+            var generos = await queryable.OrderBy(x => x.Nombre).Paginar(paginacionDTO).ToListAsync();
+           
+            return mapper.Map<List<GeneroDTO>>(generos);
+
         }
        
         [HttpGet("{id:int}")]
@@ -45,8 +55,9 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Genero genero)
+        public async Task<ActionResult> Post([FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
+            var genero = mapper.Map<Genero>(generoCreacionDTO);
             context.Add(genero);
             await context.SaveChangesAsync();
             return NoContent();
